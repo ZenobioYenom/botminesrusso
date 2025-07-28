@@ -98,15 +98,50 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         """
         await query.message.reply_text(help_text, parse_mode='Markdown')
 
-async def enviar_mensagem_agendada(context: ContextTypes.DEFAULT_TYPE):
+# ---- MENSAGENS AUTOMÁTICAS ----
+
+async def enviar_mensagem_manha(context: ContextTypes.DEFAULT_TYPE):
     msg = (
-        "🚨 *Melhores horários para usar o hack!* 🚨\n\n"
-        "O site russo está com brecha ativa!\n"
-        "Entre agora e maximize seus resultados. Se tiver dúvida, acesse o Analyzer!"
+        "🚨 *Comece o dia ganhando!*\n"
+        "O site russo ainda está vulnerável. Acesse o Analyzer agora e pegue a melhor sequência para lucrar nas primeiras horas!"
     )
     for uid in list(users):
         try:
             await context.bot.send_message(chat_id=uid, text=msg, parse_mode='Markdown')
+        except Exception:
+            pass
+
+async def enviar_mensagem_tarde(context: ContextTypes.DEFAULT_TYPE):
+    msg = (
+        "⚡ *Hora da virada!*\n"
+        "Aproveite a janela de brecha no site russo. Analise padrões agora e potencialize seus ganhos usando o Analyzer!"
+    )
+    for uid in list(users):
+        try:
+            await context.bot.send_message(chat_id=uid, text=msg, parse_mode='Markdown')
+        except Exception:
+            pass
+
+async def enviar_mensagem_fim_tarde(context: ContextTypes.DEFAULT_TYPE):
+    msg = (
+        "🔥 *Melhor horário para multiplicar!*\n"
+        "O hack segue funcionando! Use o Analyzer agora e maximize seu resultado enquanto a brecha está ativa."
+    )
+    for uid in list(users):
+        try:
+            await context.bot.send_message(chat_id=uid, text=msg, parse_mode='Markdown')
+        except Exception:
+            pass
+
+async def enviar_mensagem_noite(context: ContextTypes.DEFAULT_TYPE):
+    img_url = "https://media.giphy.com/media/l0MYRzcWP1l6NQnHy/giphy.gif"
+    caption = (
+        "🌙 *Última chance do dia!*\n"
+        "Essa pode ser sua última oportunidade hoje de aproveitar a falha do site russo.\nClique em “Abrir Analyzer” e confira!"
+    )
+    for uid in list(users):
+        try:
+            await context.bot.send_photo(chat_id=uid, photo=img_url, caption=caption, parse_mode='Markdown')
         except Exception:
             pass
 
@@ -117,12 +152,11 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     scheduler = AsyncIOScheduler()
-    # Horários: 10:00, 15:00, 21:00
-    for h in [10, 15, 21]:
-        scheduler.add_job(
-            lambda: application.create_task(enviar_mensagem_agendada(application)),
-            'cron', hour=h, minute=0
-        )
+    # Agendando mensagens diferentes em horários distintos
+    scheduler.add_job(lambda: application.create_task(enviar_mensagem_manha(application)), 'cron', hour=10, minute=0)
+    scheduler.add_job(lambda: application.create_task(enviar_mensagem_tarde(application)), 'cron', hour=15, minute=0)
+    scheduler.add_job(lambda: application.create_task(enviar_mensagem_fim_tarde(application)), 'cron', hour=18, minute=0)
+    scheduler.add_job(lambda: application.create_task(enviar_mensagem_noite(application)), 'cron', hour=21, minute=0)
     scheduler.start()
 
     print("🤖 Bot iniciado!")
