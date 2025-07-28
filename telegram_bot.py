@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, ContextTypes, filters
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-BOT_TOKEN = os.getenv("7692269177:AAGnz7egfTyoMwDY2y1px8Wmok-2W0BCecg") 
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 WEB_APP_URL = "https://minesrussobot.replit.app/"
 CADASTRO_URL = "https://1wuafz.life/?open=register&p=gv72"
 USERS_FILE = "users.json"
